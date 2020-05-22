@@ -14,7 +14,7 @@ export const CreateScreen = (props) => {
 const styles = StyleSheet.create({
   center: {
     flex: 1,
-    justifyContent: center,
-    alignItems: center
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });

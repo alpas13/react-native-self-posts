@@ -1,7 +1,9 @@
 import React, {useState} from 'react';
-import {Text, View} from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import {StyleSheet, Text, View} from 'react-native';
 import {AppLoading} from "expo";
 import {bootstrap} from "./src/bootstrap";
+import {AppNavigation} from "./src/navigation/AppNavigation";
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -12,8 +14,8 @@ export default function App() {
     )
   }
   return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-      </View>
-  );
+      <SafeAreaProvider>
+        <AppNavigation />
+      </SafeAreaProvider>
+      );
 }
