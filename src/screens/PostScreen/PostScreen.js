@@ -6,9 +6,12 @@ import {
   ScrollView,
   Image,
   Button,
-  Alert
+  Alert,
+  Platform
 } from 'react-native';
 import {DATA} from "../../mock/mock";
+import {HeaderButtons, Item} from "react-navigation-header-buttons";
+import {AppHeaderIcon} from "../../components/AppHeaderIcon";
 
 export const PostScreen = ({navigation}) => {
   const postId = navigation.getParam('postId');
@@ -43,14 +46,24 @@ export const PostScreen = ({navigation}) => {
             {post.text}
           </Text>
         </View>
-        <Button onPress={removePostHandler} title={'Remove'} color={'red'}/>
+        <View style={styles.buttonWrap}>
+          <Button onPress={removePostHandler} title={'Remove'} color={'red'}/>
+        </View>
       </ScrollView>
   );
 };
 
 PostScreen.navigationOptions = ({navigation}) => {
   const postId = navigation.getParam('postId');
-  return {headerTitle: `Post ${postId}`}
+  const booked = navigation.getParam('booked');
+  const iconName = booked ? 'ios-star' : 'ios-star-outline';
+
+  return {
+    headerTitle: `Post ${postId}`,
+    headerRight: () => <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
+      <Item title="Booked" iconName={iconName} onPress={() => alert('Booked')}/>
+    </HeaderButtons>
+  }
 };
 
 const styles = StyleSheet.create({
@@ -63,5 +76,10 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: 'openSans-regular',
+  },
+  buttonWrap: {
+    width: Platform.OS === 'android' ? '50%' : '100%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
   }
 });
