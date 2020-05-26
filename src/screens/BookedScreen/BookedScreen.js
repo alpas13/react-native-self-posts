@@ -1,20 +1,22 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {useSelector} from "react-redux";
+import {HeaderButtons, Item} from "react-navigation-header-buttons";
+import {AppHeaderIcon} from "../../components/AppHeaderIcon";
+import {PostList} from "../../components/PostList";
 
-export const BookedScreen = (props) => {
-  return (
-      <View style={styles.center}>
-        <Text>
-          BookedScreen
-        </Text>
-      </View>
-  );
+export const BookedScreen = ({navigation}) => {
+  const openPostHandler = (post) => {
+    navigation.navigate('Post', {postId: post.id, booked: post.booked});
+  }
+
+  const bookedPosts = useSelector((state) => state.post.bookedPosts);
+
+  return <PostList data={bookedPosts} onOpen={openPostHandler}/>;
 };
 
-const styles = StyleSheet.create({
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  }
+BookedScreen.navigationOptions = ({navigation}) => ({
+  headerTitle: 'Booked posts',
+  headerLeft: () => <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
+    <Item title='Menu' iconName='ios-menu' onPress={() => navigation.toggleDrawer()}/>
+  </HeaderButtons>
 });

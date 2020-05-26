@@ -1,27 +1,31 @@
-import React from 'react';
-import {StyleSheet, View, Text, Button, FlatList} from 'react-native';
-import {DATA} from '../../mock/mock';
-import {Post} from "../../components/Post";
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {ActionsCreator} from "../../store/actions/post-action";
+import {HeaderButtons, Item} from "react-navigation-header-buttons";
+import {AppHeaderIcon} from "../../components/AppHeaderIcon";
+import {PostList} from "../../components/PostList";
 
 export const MainScreen = ({navigation}) => {
   const openPostHandler = (post) => {
-    navigation.navigate('Post', {postId: post.id});
+    navigation.navigate('Post', {postId: post.id, booked: post.booked});
   }
-  return (
-      <View style={styles.wrapper}>
-        <FlatList data={DATA} renderItem={({item, }) =>
-            <Post post={item} onOpen={openPostHandler}/>} keyExtractor={(post) => post.id.toString()}
-        />
-      </View>
-  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(ActionsCreator.loadPosts())
+  }, [dispatch]);
+
+  const allPosts = useSelector(state => state.post.allPosts);
+
+  return <PostList data={allPosts} onOpen={openPostHandler}/>;
 };
 
-MainScreen.navigationOptions = {
+MainScreen.navigationOptions = ({navigation}) => ({
   headerTitle: 'My blog',
-};
-
-const styles = StyleSheet.create({
-  wrapper: {
-    padding: 10,
-  }
+  headerRight: () => <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
+    <Item title='Take photo' iconName='ios-camera' onPress={() => navigation.navigate('Create')}/>
+  </HeaderButtons>,
+  headerLeft: () => <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
+    <Item title='Menu' iconName='ios-menu' onPress={() => navigation.toggleDrawer()}/>
+  </HeaderButtons>
 });
