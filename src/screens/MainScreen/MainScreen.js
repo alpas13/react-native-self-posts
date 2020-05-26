@@ -1,5 +1,6 @@
-import React from 'react';
-import {DATA} from '../../mock/mock';
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {ActionsCreator} from "../../store/actions/post-action";
 import {HeaderButtons, Item} from "react-navigation-header-buttons";
 import {AppHeaderIcon} from "../../components/AppHeaderIcon";
 import {PostList} from "../../components/PostList";
@@ -8,7 +9,15 @@ export const MainScreen = ({navigation}) => {
   const openPostHandler = (post) => {
     navigation.navigate('Post', {postId: post.id, booked: post.booked});
   }
-  return <PostList data={DATA} onOpen={openPostHandler}/>;
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(ActionsCreator.loadPosts())
+  }, [dispatch]);
+
+  const allPosts = useSelector(state => state.post.allPosts);
+
+  return <PostList data={allPosts} onOpen={openPostHandler}/>;
 };
 
 MainScreen.navigationOptions = ({navigation}) => ({

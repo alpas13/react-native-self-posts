@@ -1,5 +1,5 @@
 import React from 'react';
-import {DATA} from '../../mock/mock';
+import {useSelector} from "react-redux";
 import {HeaderButtons, Item} from "react-navigation-header-buttons";
 import {AppHeaderIcon} from "../../components/AppHeaderIcon";
 import {PostList} from "../../components/PostList";
@@ -9,9 +9,9 @@ export const BookedScreen = ({navigation}) => {
     navigation.navigate('Post', {postId: post.id, booked: post.booked});
   }
 
-  const data = DATA.filter((post) => post.booked);
+  const bookedPosts = useSelector((state) => state.post.bookedPosts);
 
-  return <PostList data={data} onOpen={openPostHandler}/>;
+  return <PostList data={bookedPosts} onOpen={openPostHandler}/>;
 };
 
 BookedScreen.navigationOptions = ({navigation}) => ({
