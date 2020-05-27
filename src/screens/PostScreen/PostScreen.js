@@ -9,7 +9,6 @@ import {
   Alert,
   Platform
 } from 'react-native';
-import {DATA} from "../../mock/mock";
 import {useDispatch, useSelector} from "react-redux";
 import {ActionsCreator} from "../../store/actions/post-action";
 import {HeaderButtons, Item} from "react-navigation-header-buttons";
@@ -47,13 +46,20 @@ export const PostScreen = ({navigation}) => {
             style: "cancel"
           },
           {
-            text: "Remove", onPress: () => {
+            text: "Remove",
+            onPress() {
+              navigation.navigate('Main');
+             dispatch(ActionsCreator.removePost(postId));
             }, style: 'destructive'
           }
         ],
         {cancelable: false}
     );
   };
+
+  if (!post) {
+    return null;
+  }
 
   return (
       <ScrollView>

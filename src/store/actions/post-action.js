@@ -13,5 +13,11 @@ export const ActionsCreator = {
       type: ActionsTypes.TOGGLE_BOOKED,
       payload: id,
     }
+  },
+  removePost: (id) => {
+    return {
+      type: ActionsTypes.REMOVE_POST,
+      payload: id,
+    }
   }
 }
