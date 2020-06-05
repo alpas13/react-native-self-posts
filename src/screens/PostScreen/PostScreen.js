@@ -10,7 +10,7 @@ import {
   Platform
 } from 'react-native';
 import {useDispatch, useSelector} from "react-redux";
-import {ActionsCreator} from "../../store/actions/post-action";
+import {Operation} from "../../store/actions/post-action";
 import {HeaderButtons, Item} from "react-navigation-header-buttons";
 import {AppHeaderIcon} from "../../components/AppHeaderIcon";
 
@@ -25,11 +25,15 @@ export const PostScreen = ({navigation}) => {
     navigation.setParams({booked})
   }, [booked]);
 
+  useEffect(() => {
+    navigation.setParams({post})
+  }, [post]);
+
   const dispatch = useDispatch();
 
-  const toggleBooked = useCallback((postId) => {
-    dispatch(ActionsCreator.toggleBooked(postId));
-  }, [dispatch, postId]);
+  const toggleBooked = useCallback((post) => {
+    dispatch(Operation.updatePost(post));
+  }, [dispatch, post]);
 
   useEffect(() => {
     navigation.setParams({toggleBooked});
@@ -49,7 +53,7 @@ export const PostScreen = ({navigation}) => {
             text: "Remove",
             onPress() {
               navigation.navigate('Main');
-             dispatch(ActionsCreator.removePost(postId));
+             dispatch(Operation.removePost(postId));
             }, style: 'destructive'
           }
         ],
@@ -81,6 +85,7 @@ export const PostScreen = ({navigation}) => {
 PostScreen.navigationOptions = ({navigation}) => {
   const postId = navigation.getParam('postId');
   const booked = navigation.getParam('booked');
+  const post = navigation.getParam('post');
   const toggleBooked = navigation.getParam('toggleBooked')
   const iconName = booked ? 'ios-star' : 'ios-star-outline';
 
@@ -88,7 +93,7 @@ PostScreen.navigationOptions = ({navigation}) => {
     headerTitle: `Post ${postId}`,
     headerRight: () => <HeaderButtons HeaderButtonComponent={AppHeaderIcon}>
       <Item title="Booked" iconName={iconName} onPress={() => {
-        toggleBooked(postId);
+        toggleBooked(post);
       }}/>
     </HeaderButtons>
   }
