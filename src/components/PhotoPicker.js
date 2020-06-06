@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import {View, Image, Button, StyleSheet, Alert} from "react-native";
@@ -15,8 +15,8 @@ const getCameraPermissions = async () => {
   return true;
 };
 
-export const PhotoPicker = (props) => {
-  const [image, setImageState] = useState('');
+export const PhotoPicker = ({onPick, showPicker}) => {
+  const [image, setImage] = useState('');
 
   const takePhoto = async () => {
     const hasPermissions = await getCameraPermissions();
@@ -31,17 +31,13 @@ export const PhotoPicker = (props) => {
       quality: 0.7,
     });
 
-    const cleanImagePicker = () => {
-      setImageState('');
-    }
-
-    setImageState(img.uri);
-    props.onPick(img.uri, cleanImagePicker.bind(this));
+    setImage(img.uri);
+    onPick(img.uri);
   }
 
   return (
       <View style={styles.wrapper}>
-        {!!image && <Image style={styles.image} source={{uri: image}}/>}
+        {showPicker && <Image style={styles.image} source={{uri: image}}/>}
         <Button style={styles.button} title={'Pick an image from camera roll'} onPress={takePhoto}/>
       </View>)
 };

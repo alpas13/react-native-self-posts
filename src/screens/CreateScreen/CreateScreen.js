@@ -15,12 +15,11 @@ import {THEME} from "../../theme";
 import {Operation} from "../../store/actions/post-action";
 import {PhotoPicker} from "../../components/PhotoPicker";
 
-const handlers = [];
-
 export const CreateScreen = ({navigation}) => {
   const dispatch = useDispatch();
   const [text, setText] = useState('');
   const [image, setImage] = useState(null);
+  const [showPicker, setShowPicker] = useState(false);
 
   const addPostHandler = async () => {
     const post = {
@@ -31,13 +30,13 @@ export const CreateScreen = ({navigation}) => {
     };
     navigation.navigate('Main');
     await dispatch(Operation.addPost(post));
-    handlers.map((handler) => handler());
+    setShowPicker(false);
     setText('');
   };
 
-  const pickerHandler = (uri, cleaner) => {
+  const pickerHandler = (uri) => {
     setImage(uri);
-    handlers.push(cleaner);
+    setShowPicker(true);
   };
 
   return (
@@ -45,7 +44,7 @@ export const CreateScreen = ({navigation}) => {
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <View style={styles.center}>
             <TextInput style={styles.textArea} placeholder={'Describe your photo hear'} onChangeText={setText} value={text} multiline />
-            <PhotoPicker onPick={pickerHandler}/>
+            <PhotoPicker showPicker={showPicker} onPick={pickerHandler}/>
             <Button style={styles.button} title={'Save post'} color={THEME.MAIN_COLOR} onPress={addPostHandler} disabled={!text}
             />
           </View>
